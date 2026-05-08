@@ -1,0 +1,50 @@
+What is the square root of 625?@15@25@35@45@B
+If three angles of a quadrilateral are 70, 80, and 120 degrees, what is the fourth angle?@80 degrees@90 degrees@100 degrees@110 degrees@B
+What is the cube of 11?@121@1331@1441@1551@B
+How many meters are in 5 miles (assuming 1 mile is approximately 1600 meters)?@7500@8000@8500@9000@B
+What is the value of 2 raised to the power of 10?@512@1000@1024@2048@C
+In a class, 60 percent of students are boys. If there are 20 girls, how many students are there in total?@40@50@60@80@B
+If the circumference of a circle is 44 cm, what is its radius (use 22 over 7 for pi)?@7 cm@14 cm@21 cm@28 cm@A
+A worker is paid 150 dollars for 5 days. How much will he earn in 22 days?@600@660@700@750@B
+What is the decimal value of the fraction 7 over 8?@0.75@0.825@0.875@0.9@C
+A bag contains 4 red, 5 blue, and 6 green balls. If one ball is drawn at random, what is the probability it is not blue?@1 out of 3@2 out of 3@3 out of 5@4 out of 5@B
+What is the value of 0.333 repeating multiplied by 9?@2.7@2.9@3.0@3.3@C
+A number is increased by 10 percent and then decreased by 10 percent. What is the final change?@No change@1 percent increase@1 percent decrease@2 percent decrease@C
+What is the sum of the interior angles of a pentagon?@360 degrees@540 degrees@720 degrees@900 degrees@B
+If a clock loses 10 minutes every 24 hours, how many minutes will it have lost after 6 days?@40 minutes@50 minutes@60 minutes@70 minutes@C
+A tank can be filled by one pipe in 4 hours and emptied by another in 6 hours. How many hours will it take to fill the tank if both pipes are open?@8 hours@10 hours@12 hours@14 hours@C
+If the average of five consecutive integers is 20, what is the value of the largest integer?@20@21@22@23@C
+In a group of 60 people, 40 like tea and 35 like coffee. If everyone likes at least one, how many like both?@10@15@20@25@B
+What is the sum of all prime numbers between 20 and 40?@100@110@120@131@C
+If 15 men can complete a piece of work in 20 days, how many days will it take 25 men to complete the same work?@10@12@15@18@B
+What is the smallest number which when divided by 12, 15, and 20 leaves a remainder of 0 in each case?@60@120@180@240@A
+If the radius of a circle is doubled, by what factor does its area increase?@2@3@4@8@C
+The ratio of ages of two people is 4 to 5. If the sum of their ages is 81, how old is the younger person?@36@40@45@48@A
+What is the value of 101 squared minus 99 squared?@200@300@400@500@C
+If a person spends 20 percent of their salary on rent and 50 percent of the remainder on food, what percentage of the salary is left?@30 percent@40 percent@50 percent@60 percent@B
+A cistern is normally filled in 8 hours, but takes 2 hours longer because of a leak. How many hours would the leak take to empty a full cistern?@30@40@45@50@B
+If 3x plus 5 equals 20, what is the value of 6x plus 10?@30@40@50@60@B
+If the product of two numbers is 120 and the sum of their squares is 289, what is the sum of the two numbers?@17@23@25@30@B
+What is the probability of drawing either a King or a Queen from a standard deck of 52 cards?@2 out of 13@1 out of 13@4 out of 52@1 out of 26@A
+A rectangular plot measures 50 meters by 30 meters. A path 2 meters wide is built inside along the border. What is the area of the path?@284@304@316@336@B
+If the length of a rectangle is increased by 20 percent and width is decreased by 20 percent, what is the change in area?@No change@4 percent increase@4 percent decrease@2 percent decrease@C
+What is the binary representation of the decimal number 25?@11001@10101@11100@10011@A
+A father is 3 times as old as his son. In 12 years, he will be twice as old as his son. How old is the father now?@30@36@42@48@B
+How many integers between 1 and 100 are divisible by both 3 and 5?@5@6@7@8@B
+If a person walks 4 km north and then 3 km east, how far are they from the starting point?@5 km@7 km@8 km@10 km@A
+What is the angle between the hands of a clock at 3:30?@75 degrees@85 degrees@90 degrees@95 degrees@A
+How many seconds are in 24 hours?@84400@86400@88400@90400@B
+If Set X contains the letters in the word "APPLE", how many elements are in Set X?@3@4@5@6@B
+If one-third of a number is 15 less than the number itself, what is the number?@20@22.5@25@30@B
+If the sides of a triangle are 5, 12, and 13, what is its area?@30@32.5@60@65@A
+A man is 24 years older than his son. In two years, his age will be twice the age of his son. What is the current age of the son?@14@18@22@26@C
+If 5 workers can build 5 tables in 5 days, how many days will it take 100 workers to build 100 tables?@1@5@50@100@B
+A fruit seller had some apples. He sells 40 percent of them and still has 420 apples left. How many apples did he have originally?@600@700@800@900@B
+In an examination, a student scores 4 marks for every correct answer and loses 1 mark for every wrong answer. If he attempts 60 questions and scores 130 marks, how many questions did he answer correctly?@35@38@40@42@B
+Two numbers are such that their sum is 20 and their product is 96. What is the difference between the two numbers?@2@4@6@8@B
+A student has to secure 40 percent marks to pass. He gets 178 marks and fails by 22 marks. What are the maximum marks for the examination?@400@500@600@700@B
+If the length of a rectangle is halved and its breadth is tripled, what is the percentage change in its area?@25 percent increase@50 percent increase@75 percent increase@No change@B
+A number consists of two digits. If the digits interchange places and the new number is added to the original number, the resulting number is always divisible by?@9@10@11@12@C
+A person has some hens and some horses. If the total number of heads is 48 and the total number of feet equals 140, how many hens does the person have?@22@24@26@28@C
+In a town of 500 people, 285 subscribe to Magazine A and 212 subscribe to Magazine B. If 50 people subscribe to neither, how many people subscribe to both magazines?@43@45@47@50@C
+What is the range of the following set of numbers: 12, 25, 4, 18, 33, 15, and 21?@21@25@29@33@C

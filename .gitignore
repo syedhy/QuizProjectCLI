@@ -1,0 +1,22 @@
+# Maven
+target/
+
+# IntelliJ
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+# Mac
+.DS_Store
+
+# Logs
+*.log
+
+# Generated files
+generated_data/dashboard.html
+generated_data/Questions.txt
+
+# Optional
+dependency-reduced-pom.xml

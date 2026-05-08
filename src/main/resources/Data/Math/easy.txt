@@ -1,0 +1,50 @@
+If a shirt costs 20 dollars and you buy two, how much do you spend?@40 dollars@50 dollars@30 dollars@60 dollars@A
+If you have 12 apples and give away 4, how many are left?@6@7@8@9@C
+If a train travels 60 miles in one hour, how far does it go in 3 hours?@120 miles@150 miles@180 miles@200 miles@C
+What is the result of 50 minus 18?@32@34@36@38@A
+If you have 5 boxes and each box has 6 pens, how many pens are there?@25@30@35@40@B
+If a notebook costs 5 dollars, how many can you buy with 25 dollars?@4@5@6@7@B
+How many minutes are there in 2 hours?@60@100@120@140@C
+If you have 20 pieces of candy and share them equally with 4 friends, how many does each get?@4@5@6@10@B
+If a square has a side of 4 cm, what is its perimeter?@8 cm@12 cm@16 cm@20 cm@C
+If you buy a burger for 7 dollars and a soda for 3 dollars, what is the total?@9@10@11@12@B
+If one dozen equals 12, how many items are in 2 dozen?@20@22@24@26@C
+What is 100 divided by 4?@20@25@30@50@B
+If a pizza is cut into 8 slices and you eat 3, how many slices are left?@4@5@6@7@B
+What is 4 times 8?@28@30@32@34@C
+How many seconds are in one minute?@30@50@60@100@C
+What is the next number after 99?@90@100@110@101@B
+If a movie starts at 2 PM and lasts for 2 hours, what time does it end?@3 PM@4 PM@5 PM@6 PM@B
+If you have 3 rows of 4 chairs, how many chairs are there?@7@10@12@14@C
+How many cents are in 5 dollars?@50@500@5000@5@B
+What is 18 divided by 2?@7@8@9@10@C
+If you save 10 dollars every week, how much do you have after 4 weeks?@30@40@50@60@B
+What is the product of 5 and 9?@40@45@50@55@B
+If a car has 4 tires, how many tires do 5 cars have?@16@18@20@22@C
+How many days are in 3 weeks?@14@21@28@30@B
+What is 7 plus 9?@14@15@16@17@C
+If you double 15, what number do you get?@25@30@35@40@B
+If you have 10 pairs of shoes, how many individual shoes do you have?@10@15@20@25@C
+What is 12 times 3?@32@34@36@38@C
+How many grams are in 1 kilogram?@100@500@1000@10000@C
+What is 21 divided by 3?@6@7@8@9@B
+If a toy costs 12 dollars and you pay with a 20 dollar bill, what is the change?@6@7@8@9@C
+What is the sum of 5, 5, and 5?@10@15@20@25@B
+How many edges does a cube have?@6@8@10@12@D
+What is 7 times 7?@42@47@49@54@C
+If a cake is split into 4 equal parts, what percent is one part?@20 percent@25 percent@50 percent@75 percent@B
+If you are 10 years old now, how old will you be in 15 years?@20@25@30@35@B
+How many sides does a hexagon have?@5@6@7@8@B
+What is 13 minus 6?@5@6@7@8@C
+If a box contains 10 chocolates, how many are in 10 boxes?@50@100@150@200@B
+What is the value of 5 times 2 plus 3?@10@13@15@25@B
+How many wheels are on 3 tricycles?@6@7@8@9@D
+What is 25 plus 25 plus 25?@50@75@100@125@B
+If you walk 2 miles a day, how many miles do you walk in a week?@10@12@14@16@C
+What is the sum of 15 and 27?@43@35@42@45@C
+What is 9 multiplied by 3?@18@21@24@27@D
+What is half of 56?@26@28@27@23@B
+What is the value of 8 plus 17?@23@24@25@26@C
+What is 14 plus 16?@28@30@32@34@B
+What is 30 divided by 5?@5@6@7@8@B
+What is 60 minus 25?@35@40@45@50@A

@@ -1,0 +1,50 @@
+If a car travels at a constant speed of 45 miles per hour, how far will it travel in 4 hours?@160 miles@180 miles@200 miles@220 miles@B
+A jacket is on sale for 25 percent off its original price of 80 dollars. What is the sale price?@60 dollars@55 dollars@65 dollars@70 dollars@A
+If a rectangular room is 12 feet long and 10 feet wide, what is its area in square feet?@100@110@120@130@C
+A baker makes 144 cookies and packs them into boxes of 12. How many boxes does he fill?@10@11@12@13@C
+If 5 shirts cost 75 dollars, what is the cost of a single shirt?@12 dollars@15 dollars@18 dollars@20 dollars@B
+A person starts a journey at 10:30 AM and finishes at 1:15 PM. How long did the journey take?@2 hours 15 minutes@2 hours 45 minutes@3 hours 15 minutes@3 hours 45 minutes@B
+If a square has an area of 64 square centimeters, what is the length of one side?@6 cm@7 cm@8 cm@9 cm@C
+If 4 workers can build a fence in 8 hours, how many hours would it take 8 workers?@2@4@6@16@B
+What is the next number in the sequence: 2, 4, 8, 16, ...?@20@24@30@32@D
+If a smartphone costs 400 dollars and the price increases by 10 percent, what is the new price?@410@420@440@450@C
+If 3 kilograms of apples cost 9 dollars, how much do 7 kilograms cost?@18 dollars@21 dollars@24 dollars@27 dollars@B
+What is 2 to the power of 5?@16@25@32@64@C
+If a theater has 20 rows with 15 seats in each row, what is the total capacity?@250@300@350@400@B
+What is the remainder when 100 is divided by 7?@1@2@3@4@B
+A shopkeeper buys a lamp for 50 dollars and sells it for 75 dollars. What is the profit percentage?@25 percent@50 percent@75 percent@100 percent@B
+If the perimeter of a regular hexagon is 42 cm, what is the length of each side?@6 cm@7 cm@8 cm@9 cm@B
+How many grams are in 2.5 kilograms?@250@2500@25000@25@B
+What is the sum of the first 10 positive integers?@45@50@55@60@C
+What is 1000 minus 345?@645@655@665@675@B
+A map scale is 1 inch to 50 miles. If two cities are 4 inches apart on the map, how far are they in reality?@150 miles@200 miles@250 miles@300 miles@B
+What is the value of 50 divided by 0.5?@25@50@100@150@C
+If a shirt is 40 dollars and you buy one at full price and a second at half price, what is the total?@50@60@70@80@B
+If you flip a fair coin three times, what is the total number of possible outcomes?@3@6@8@9@C
+A box is 5 cm long, 4 cm wide, and 3 cm high. What is its volume in cubic centimeters?@12@20@60@120@C
+If 10 percent of a number is 25, what is the number?@125@200@250@500@C
+What is the value of 12 multiplied by 12?@124@144@164@184@B
+What is the largest prime number less than 20?@15@17@18@19@D
+If a person runs 5 miles in 40 minutes, what is their pace in minutes per mile?@6@7@8@9@C
+What is 20 percent of 50 plus 10 percent of 100?@10@20@30@40@B
+A library has 5000 books and adds 200 new books every month. How many books will it have in a year?@5200@6200@7400@8000@C
+What is the difference between 10 squared and 9 squared?@1@9@19@21@C
+If a dozen eggs cost 3.60 dollars, what is the cost of one egg?@0.25@0.30@0.35@0.40@B
+How many degrees are in a right angle?@45@90@180@360@B
+If a watch gains 2 minutes every hour, how many minutes will it gain in a day?@24@48@50@60@B
+What is 3 multiplied by 4 multiplied by 5?@50@60@70@80@B
+If you are facing North and turn 180 degrees, which direction are you facing?@East@West@South@North-East@C
+A car uses 1 liter of fuel for every 12 kilometers. How much fuel is needed for 60 kilometers?@4 liters@5 liters@6 liters@7 liters@B
+What is the sum of 1.5, 2.5, and 3.5?@6.5@7.5@8.5@9.5@B
+If a bag contains 5 red marbles and 5 blue marbles, what is the chance of picking a red one?@25 percent@50 percent@75 percent@100 percent@B
+What is 1000 divided by 8?@110@120@125@130@C
+If an angle is 40 degrees, what is its supplementary angle?@50@60@140@150@C
+What is 7 times 8 minus 6?@45@50@54@56@B
+If you save 5 dollars on Monday and double your savings each day, how much do you save on Wednesday?@10@15@20@25@C
+What is the total number of days in the months of June and July combined?@60@61@62@63@B
+If a person is 1.8 meters tall, how many centimeters is that?@18@180@1800@1.8@B
+What is the perimeter of a rectangle with length 8 and width 5?@13@21@26@40@C
+If you subtract 15 from 50 and then add 10, what is the result?@35@45@55@65@B
+What is the average of the numbers 10, 20, and 30?@15@20@25@30@B
+What is 15 percent of 200?@20@25@30@35@C
+What is the result of 125 divided by 5?@20@25@30@35@B
