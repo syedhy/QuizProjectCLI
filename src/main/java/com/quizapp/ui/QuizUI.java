@@ -1,46 +1,69 @@
 package com.quizapp.ui;
+
 public class QuizUI {
+    private static final int WIDTH = 78;
+
     public static void printQuestionBox(int qNum , String question , String[] options) {
-        int width = 76;
+        Terminal.printEmptyLines(1);
 
-        Terminal.printCentered(Theme.BORDER_COLOR + "╭" + "─".repeat(width) + "╮" + Theme.RESET);
-        Terminal.printCentered(Theme.BORDER_COLOR + "│" + Theme.MUTED_TEXT + Terminal.padRight("  Question " + qNum , width) + Theme.BORDER_COLOR + "│" + Theme.RESET);
-        Terminal.printCentered(Theme.BORDER_COLOR + "├" + "─".repeat(width) + "┤" + Theme.RESET);
+        Terminal.print(Theme.BORDER_COLOR + "╭" + "─".repeat(WIDTH) + "╮" + Theme.RESET);
+        Terminal.print(Theme.BORDER_COLOR + "│" + Theme.TITLE_TEXT + Theme.BOLD + Terminal.centerLine("QUESTION " + qNum , WIDTH) + Theme.BORDER_COLOR + "│" + Theme.RESET);
+        Terminal.print(Theme.BORDER_COLOR + "├" + "─".repeat(WIDTH) + "┤" + Theme.RESET);
 
-        animatedWrappedLine(question , width , Theme.QUESTION_TEXT + Theme.BOLD);
-        Terminal.printCentered(Theme.BORDER_COLOR + "├" + "─".repeat(width) + "┤" + Theme.RESET);
+        printQuestion(question);
+
+        Terminal.print(Theme.BORDER_COLOR + "├" + "─".repeat(WIDTH) + "┤" + Theme.RESET);
 
         char optionLetter = 'A';
 
         for (int i = 0; i < 4; i++) {
-            String optionText = "[" + optionLetter + "] " + options[i];
-            printWrappedLine(optionText , width , Theme.OPTION_TEXT);
+            printOption(optionLetter , options[i]);
             optionLetter++;
         }
 
-        Terminal.printCentered(Theme.BORDER_COLOR + "╰" + "─".repeat(width) + "╯" + Theme.RESET);
+        Terminal.print(Theme.BORDER_COLOR + "╰" + "─".repeat(WIDTH) + "╯" + Theme.RESET);
 
-        System.out.print("\n" + Theme.QUESTION_TEXT + Theme.BOLD + "> Answer: " + Theme.RESET);
+        Terminal.printEmptyLines(1);
+        Terminal.printInline(Theme.QUESTION_TEXT + Theme.BOLD + "> Answer: " + Theme.RESET);
     }
 
-    private static void printWrappedLine(String text , int width , String color) {
-        int contentWidth = width - 4;
+    private static void printQuestion(String question) {
+        String[] lines = wrapText(question , WIDTH - 6);
 
-        if (text.length() <= contentWidth) {
-            Terminal.printCentered(
+        for (String line : lines) {
+            Terminal.print(
                 Theme.BORDER_COLOR + "│" +
-                color + Terminal.padRight("  " + text , width) +
+                Theme.QUESTION_TEXT + Theme.BOLD + Terminal.padRight("  " + line , WIDTH) +
                 Theme.BORDER_COLOR + "│" +
                 Theme.RESET
             );
+        }
+    }
 
-            return;
+    private static void printOption(char letter , String option) {
+        String text = letter + ". " + option;
+        String[] lines = wrapText(text , WIDTH - 8);
+
+        for (String line : lines) {
+            Terminal.print(
+                Theme.BORDER_COLOR + "│" +
+                Theme.OPTION_TEXT + Terminal.padRight("  " + line , WIDTH) +
+                Theme.BORDER_COLOR + "│" +
+                Theme.RESET
+            );
+        }
+    }
+
+    private static String[] wrapText(String text , int maxWidth) {
+        if (text.length() <= maxWidth) {
+            return new String[]{text};
         }
 
+        StringBuilder result = new StringBuilder();
         int index = 0;
 
         while (index < text.length()) {
-            int end = Math.min(index + contentWidth , text.length());
+            int end = Math.min(index + maxWidth , text.length());
 
             if (end < text.length()) {
                 int lastSpace = text.lastIndexOf(" " , end);
@@ -50,60 +73,20 @@ public class QuizUI {
                 }
             }
 
-            String part = text.substring(index , end).trim();
-
-            Terminal.printCentered(
-                Theme.BORDER_COLOR + "│" +
-                color + Terminal.padRight("  " + part , width) +
-                Theme.BORDER_COLOR + "│" +
-                Theme.RESET
-            );
-
+            result.append(text.substring(index , end).trim()).append("\n");
             index = end;
         }
-    }
 
-    private static void animatedWrappedLine(String text, int width, String color) {
-        int contentWidth = width - 4;
-
-        if (text.length() <= contentWidth) {
-
-            String finalLine = Theme.BORDER_COLOR + "│" +
-                    color + Terminal.padRight("  " + text, width) +
-                    Theme.BORDER_COLOR + "│" +
-                    Theme.RESET;
-
-            int terminalWidth = Terminal.getWidth();
-            int padding = Math.max(0, (terminalWidth - Terminal.removeAnsi(finalLine).length()) / 2);
-
-            System.out.print(" ".repeat(padding));
-
-            try {
-                for (char c : finalLine.toCharArray()) {
-                    System.out.print(c);
-                    System.out.flush();
-                    Thread.sleep(2);
-                }
-
-                System.out.println();
-
-            } catch (Exception e) {
-                System.out.println(finalLine);
-            }
-
-            return;
-        }
-
-        printWrappedLine(text, width, color);
+        return result.toString().split("\\R");
     }
 
     public static void printFeedback(boolean isCorrect) {
+        Terminal.printEmptyLines(1);
+
         if (isCorrect) {
-            System.out.println();
-            Terminal.printCentered(Theme.FEEDBACK_CORRECT + Theme.BOLD + "[ CORRECT ]" + Theme.RESET);
+            Terminal.print(Theme.FEEDBACK_CORRECT + Theme.BOLD + "✓ Correct" + Theme.RESET);
         } else {
-            System.out.println();
-            Terminal.printCentered(Theme.FEEDBACK_WRONG + Theme.BOLD + "[ WRONG ]" + Theme.RESET);
+            Terminal.print(Theme.FEEDBACK_WRONG + Theme.BOLD + "✗ Wrong" + Theme.RESET);
         }
     }
 
@@ -114,20 +97,20 @@ public class QuizUI {
             printFeedback(true);
         } else {
             printFeedback(false);
-            Terminal.printCentered(Theme.MUTED_TEXT + "Your Answer: " + Character.toUpperCase(userAnswer) + Theme.RESET);
-            Terminal.printCentered(Theme.FEEDBACK_CORRECT + "Correct Answer: " + Character.toUpperCase(correctAnswer) + Theme.RESET);
+            Terminal.print(Theme.MUTED_TEXT + "You chose: " + Character.toUpperCase(userAnswer) + Theme.RESET);
+            Terminal.print(Theme.FEEDBACK_CORRECT + "Correct answer: " + Character.toUpperCase(correctAnswer) + Theme.RESET);
         }
     }
 
     public static void printInfo(String message) {
-        Terminal.printCentered(Theme.MUTED_TEXT + message + Theme.RESET);
+        Terminal.print(Theme.MUTED_TEXT + message + Theme.RESET);
     }
 
     public static void printSuccess(String message) {
-        Terminal.printCentered(Theme.FEEDBACK_CORRECT + message + Theme.RESET);
+        Terminal.print(Theme.FEEDBACK_CORRECT + message + Theme.RESET);
     }
 
     public static void printError(String message) {
-        Terminal.printCentered(Theme.FEEDBACK_WRONG + message + Theme.RESET);
+        Terminal.print(Theme.FEEDBACK_WRONG + message + Theme.RESET);
     }
 }

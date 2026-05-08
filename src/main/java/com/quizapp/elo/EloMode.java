@@ -9,8 +9,8 @@ import com.quizapp.helpers.FileChooser;
 import com.quizapp.helpers.ListMaker;
 import com.quizapp.helpers.Question;
 import com.quizapp.profiles.Profile;
-import com.quizapp.profiles.ProfileManager;
 import com.quizapp.profiles.ProfileSession;
+import com.quizapp.profiles.ProfileStats;
 import com.quizapp.ui.MenuUI;
 import com.quizapp.ui.ProgressUI;
 import com.quizapp.ui.QuizUI;
@@ -26,9 +26,11 @@ public class EloMode {
             return;
         }
 
-        MenuUI.printModeDescription("ELO Mode" ,
-                "Ranked quiz mode where your rating changes after every match" ,
-                "Answer 5 questions\nScore 3 or more to win\nWinning increases ELO\nLosing decreases ELO");
+        MenuUI.printModeDescription(
+            "ELO Mode" ,
+            "Ranked quiz mode where your rating changes after every match" ,
+            "Answer 5 questions\nScore 3 or more to win\nWinning increases ELO\nLosing decreases ELO"
+        );
 
         MenuUI.pressEnterToContinue(sc);
 
@@ -37,24 +39,24 @@ public class EloMode {
 
         List<Question> qs = ListMaker.makeList(file);
 
-        if (qs == null || qs.isEmpty()) {
-            return;
-        }
+        if (qs == null || qs.isEmpty()) return;
 
         Collections.shuffle(qs);
 
         int score = 0;
+        int answered = 0;
         int questionNumber = 1;
 
         for (Question q : qs) {
             ProgressUI.printQuestionProgress(questionNumber , 5);
 
-            System.out.println();
-
             QuizUI.printQuestionBox(questionNumber , q.question , q.options);
 
             String input = sc.nextLine();
+
             char ans = input.isEmpty() ? ' ' : input.toUpperCase().charAt(0);
+
+            answered++;
 
             if (ans == q.answer.charAt(0)) {
                 score++;
@@ -65,9 +67,7 @@ public class EloMode {
             Screen.pause(1200);
             Screen.clear();
 
-            if (questionNumber >= 5) {
-                break;
-            }
+            if (questionNumber >= 5) break;
 
             questionNumber++;
         }
@@ -83,7 +83,9 @@ public class EloMode {
 
         currentProfile.setElo(newElo);
 
-        ProfileManager.addGameResult(currentProfile , score , won);
+        ProfileStats.recordRankedMatch(currentProfile , won , score);
+        ProfileStats.recordMode(currentProfile , "elo" , answered , score);
+
         ProfileSession.setCurrentProfile(currentProfile);
 
         ProgressUI.printResultCard(

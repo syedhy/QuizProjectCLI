@@ -25,7 +25,10 @@ public class SuddenDeathMode {
         int i = 1;
 
         for(Question q : qs){
+            ProgressUI.printQuestionProgress(i , qs.size());
+
             QuizUI.printQuestionBox(i , q.question , q.options);
+
             String input = sc.nextLine();
 
             char ans = ' ';
@@ -40,7 +43,7 @@ public class SuddenDeathMode {
                 Screen.clear();
             } else {
                 QuizUI.printAnswerFeedback(ans , q.answer.charAt(0));
-                Terminal.printCentered(Theme.FEEDBACK_WRONG + "Eliminated! Game terminated" + Theme.RESET);
+                Terminal.print(Theme.FEEDBACK_WRONG + "Eliminated! Game terminated" + Theme.RESET);
                 Screen.pause(1200);
                 return;
             }

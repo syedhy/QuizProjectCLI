@@ -29,19 +29,18 @@ public class PlayerVsPlayer {
 
             Screen.clear();
 
-            Terminal.printCentered(Theme.BORDER_COLOR + "╭────────────────────────────────────╮" + Theme.RESET);
-            Terminal.printCentered(Theme.BORDER_COLOR + "│" + Theme.TITLE_TEXT + Terminal.centerLine("PLAYER " + (j + 1) + " GET READY" , 36) + Theme.BORDER_COLOR + "│" + Theme.RESET);
-            Terminal.printCentered(Theme.BORDER_COLOR + "╰────────────────────────────────────╯" + Theme.RESET);
+            Terminal.print(Theme.BORDER_COLOR + "╭────────────────────────────────────╮" + Theme.RESET);
+            Terminal.print(Theme.BORDER_COLOR + "│" + Theme.TITLE_TEXT + Terminal.centerLine("PLAYER " + (j + 1) + " GET READY" , 36) + Theme.BORDER_COLOR + "│" + Theme.RESET);
+            Terminal.print(Theme.BORDER_COLOR + "╰────────────────────────────────────╯" + Theme.RESET);
 
-            Screen.pause(2000);
+            Screen.pause(1500);
 
             for(Question q : qs){
                 Screen.clear();
 
-                Terminal.printCentered(Theme.TITLE_TEXT + Theme.BOLD + "PLAYER " + (j + 1) + " TURN" + Theme.RESET);
-                ProgressUI.printQuestionProgress(i , 5);
+                Terminal.print(Theme.TITLE_TEXT + Theme.BOLD + "PLAYER " + (j + 1) + " TURN" + Theme.RESET);
 
-                System.out.println();
+                ProgressUI.printQuestionProgress(i , 5);
 
                 QuizUI.printQuestionBox(i , q.question , q.options);
 

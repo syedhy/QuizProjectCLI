@@ -2,7 +2,7 @@ package com.quizapp.leaderboard;
 
 import java.util.Comparator;
 import java.util.List;
-
+import com.quizapp.ui.Terminal;
 import com.quizapp.profiles.Profile;
 import com.quizapp.profiles.ProfileManager;
 import com.quizapp.ui.Screen;
@@ -31,10 +31,10 @@ public class Leaderboard {
                     i + 1 ,
                     p.getName() ,
                     p.getElo() ,
-                    p.getWins() ,
-                    p.getLosses());
+                    p.getRankedWins() ,
+                    p.getRankedLosses());
 
-            System.out.println(Theme.BORDER_COLOR + "║" + Theme.OPTION_TEXT + Screen.padRight(line , 52) + Theme.BORDER_COLOR + "║" + Theme.RESET);
+            System.out.println(Theme.BORDER_COLOR + "║" + Theme.OPTION_TEXT + Terminal.padRight(line , 52) + Theme.BORDER_COLOR + "║" + Theme.RESET);
         }
 
         System.out.println(Theme.BORDER_COLOR + "╚════════════════════════════════════════════════════╝" + Theme.RESET);

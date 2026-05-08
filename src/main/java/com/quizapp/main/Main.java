@@ -30,26 +30,25 @@ public class Main {
 
         Art.printBootLogo();
 
-        System.out.println();
+        Terminal.printEmptyLines(1);
 
-        Animator.centeredTypewriter(
+        Animator.typewriter(
             Theme.MUTED_TEXT + "Loading Quiz Engine..." + Theme.RESET ,
-            20
+            12
         );
 
-        Animator.loading("Initializing systems" , 1800);
-
-        Screen.pause(400);
+        Screen.pause(500);
         Screen.clear();
 
         Profile profile = ProfileMenu.chooseProfile(sc);
         ProfileSession.setCurrentProfile(profile);
 
         while (true) {
+            profile = ProfileSession.getCurrentProfile();
+
             Screen.clear();
 
-            Terminal.printCentered(Theme.TITLE_TEXT + "Current Profile: " + profile.getName() + " | ELO: " + profile.getElo() + Theme.RESET);
-            System.out.println();
+            printTopProfileBar(profile);
 
             MenuUI.printMainMenu();
 
@@ -68,18 +67,54 @@ public class Main {
                 LLM.StartLLMQuiz(sc);
             }else if(modeChoice == 6){
                 EloMode.startEloQuiz(sc);
-                profile = ProfileSession.getCurrentProfile();
             }else if(modeChoice == 7){
                 DashboardGenerator.openDashboard(profile);
                 System.out.print("\nPress ENTER to return...");
                 sc.nextLine();
             }else if(modeChoice == 8){
+                profile = ProfileMenu.chooseProfile(sc);
+                ProfileSession.setCurrentProfile(profile);
+                continue;
+            }else if(modeChoice == 9){
+                Screen.clear();
+                Terminal.print(Theme.TITLE_TEXT + Theme.BOLD + "Thanks for playing Quiz Project" + Theme.RESET);
+                Terminal.print(Theme.MUTED_TEXT + "Progress saved locally in generated_data/quiz.db" + Theme.RESET);
                 break;
             }else{
-                System.out.println("Wrong Choice");
+                Terminal.print(Theme.FEEDBACK_WRONG + "Wrong choice" + Theme.RESET);
+                Screen.pause(1000);
             }
         }
 
         sc.close();
+    }
+
+    private static void printTopProfileBar(Profile profile) {
+        int width = 64;
+
+        Terminal.print(Theme.BORDER_COLOR + "╭" + "─".repeat(width) + "╮" + Theme.RESET);
+
+        Terminal.print(
+            Theme.BORDER_COLOR + "│" +
+            Theme.TITLE_TEXT + Terminal.centerLine("Current Profile: " + profile.getName() + "   │   ELO: " + profile.getElo() , width) +
+            Theme.BORDER_COLOR + "│" +
+            Theme.RESET
+        );
+
+        Terminal.print(
+            Theme.BORDER_COLOR + "│" +
+            Terminal.padRight("" , width) +
+            Theme.BORDER_COLOR + "│" +
+            Theme.RESET
+        );
+
+        Terminal.print(
+            Theme.BORDER_COLOR + "│" +
+            Theme.MUTED_TEXT + Terminal.centerLine("Ranked: " + profile.getRankedWins() + "W - " + profile.getRankedLosses() + "L" , width) +
+            Theme.BORDER_COLOR + "│" +
+            Theme.RESET
+        );
+
+        Terminal.print(Theme.BORDER_COLOR + "╰" + "─".repeat(width) + "╯" + Theme.RESET);
     }
 }

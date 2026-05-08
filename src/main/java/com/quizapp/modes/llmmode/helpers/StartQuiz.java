@@ -5,8 +5,8 @@ import java.util.*;
 import com.quizapp.dashboard.DashboardGenerator;
 import com.quizapp.helpers.*;
 import com.quizapp.profiles.Profile;
-import com.quizapp.profiles.ProfileManager;
 import com.quizapp.profiles.ProfileSession;
+import com.quizapp.profiles.ProfileStats;
 import com.quizapp.ui.*;
 
 public class StartQuiz {
@@ -21,6 +21,7 @@ public class StartQuiz {
         Collections.shuffle(qs);
 
         int score = 0;
+        int answered = 0;
         int currentNum = 1;
 
         Screen.clear();
@@ -28,13 +29,13 @@ public class StartQuiz {
         for (Question q : qs) {
             ProgressUI.printQuestionProgress(currentNum , 5);
 
-            System.out.println();
-
             QuizUI.printQuestionBox(currentNum , q.question , q.options);
 
             String input = sc.nextLine();
 
-            char ans = (input.isEmpty()) ? ' ' : input.toUpperCase().charAt(0);
+            char ans = input.isEmpty() ? ' ' : input.toUpperCase().charAt(0);
+
+            answered++;
 
             if (ans == q.answer.charAt(0)) {
                 score++;
@@ -57,15 +58,15 @@ public class StartQuiz {
             "AI generated challenge"
         );
 
-        saveProfileResult(score >= 3);
+        saveProfileResult(answered , score);
         askDashboard(sc);
     }
 
-    private static void saveProfileResult(boolean won) {
+    private static void saveProfileResult(int answered , int score) {
         Profile profile = ProfileSession.getCurrentProfile();
 
         if (profile != null) {
-            ProfileManager.addGameResult(profile , 0 , won);
+            ProfileStats.recordMode(profile , "llm" , answered , score);
             ProfileSession.setCurrentProfile(profile);
         }
     }

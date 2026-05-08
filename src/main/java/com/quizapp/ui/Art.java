@@ -5,53 +5,60 @@ import com.github.lalyos.jfiglet.FigletFont;
 public class Art {
 
     public static void printBootLogo() {
+        Screen.clear();
+
         try {
             String ascii = FigletFont.convertOneLine("Quiz Project");
 
-            Terminal.printEmptyLines(1);
-
             String[] lines = ascii.split("\\R");
 
             for (String line : lines) {
-                Terminal.printCentered(Theme.TITLE_TEXT + line + Theme.RESET);
+                Terminal.print(Theme.TITLE_TEXT + Theme.BOLD + line + Theme.RESET);
             }
 
-            Terminal.printEmptyLines(1);
-
-            Terminal.printCentered(Theme.MUTED_TEXT + "Interactive CLI Quiz Experience" + Theme.RESET);
-
         } catch (Exception e) {
-            Terminal.printCentered(Theme.TITLE_TEXT + "QUIZ PROJECT" + Theme.RESET);
+            Terminal.print(Theme.TITLE_TEXT + Theme.BOLD + "QUIZ PROJECT" + Theme.RESET);
         }
+
+        Terminal.printEmptyLines(1);
+
+        Terminal.print(
+            Theme.MUTED_TEXT +
+            "Profiles  •  ELO  •  AI Quizzes  •  Dashboard" +
+            Theme.RESET
+        );
+
+        Screen.pause(700);
     }
 
-    public static void printModeBanner(String modeName) {
+    public static void printModeIntro(String modeName , String description , String rules) {
+        Screen.clear();
+
         try {
             String ascii = FigletFont.convertOneLine(modeName);
 
-            System.out.println();
-
             String[] lines = ascii.split("\\R");
 
             for (String line : lines) {
-                Terminal.printCentered(Theme.QUESTION_TEXT + line + Theme.RESET);
+                Terminal.print(Theme.TITLE_TEXT + Theme.BOLD + line + Theme.RESET);
             }
 
-            System.out.println();
-
         } catch (Exception e) {
-            Terminal.printCentered(modeName.toUpperCase());
+            Terminal.print(Theme.TITLE_TEXT + Theme.BOLD + modeName.toUpperCase() + Theme.RESET);
         }
-    }
 
-    public static void printProfileArt(String profileName) {
-        Terminal.printCentered(Theme.BORDER_COLOR + "╭────────────────────╮" + Theme.RESET);
-        Terminal.printCentered(Theme.BORDER_COLOR + "│" + Theme.TITLE_TEXT + Terminal.centerLine("PROFILE" , 20) + Theme.BORDER_COLOR + "│" + Theme.RESET);
-        Terminal.printCentered(Theme.BORDER_COLOR + "├────────────────────┤" + Theme.RESET);
+        Terminal.printEmptyLines(1);
 
-        Terminal.printCentered(Theme.BORDER_COLOR + "│" + Theme.OPTION_TEXT + Terminal.centerLine("◉" , 20) + Theme.BORDER_COLOR + "│" + Theme.RESET);
+        Terminal.print(Theme.OPTION_TEXT + description + Theme.RESET);
 
-        Terminal.printCentered(Theme.BORDER_COLOR + "│" + Theme.MUTED_TEXT + Terminal.centerLine(profileName , 20) + Theme.BORDER_COLOR + "│" + Theme.RESET);
-        Terminal.printCentered(Theme.BORDER_COLOR + "╰────────────────────╯" + Theme.RESET);
+        Terminal.printEmptyLines(1);
+
+        String[] rulesArray = rules.split("\\n");
+
+        for (String rule : rulesArray) {
+            Terminal.print(Theme.MUTED_TEXT + "• " + rule.trim() + Theme.RESET);
+        }
+
+        Terminal.printEmptyLines(2);
     }
 }

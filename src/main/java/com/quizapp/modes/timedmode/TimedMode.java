@@ -5,7 +5,7 @@ import java.util.*;
 import com.quizapp.dashboard.DashboardGenerator;
 import com.quizapp.helpers.*;
 import com.quizapp.profiles.Profile;
-import com.quizapp.profiles.ProfileManager;
+import com.quizapp.profiles.ProfileStats;
 import com.quizapp.profiles.ProfileSession;
 import com.quizapp.ui.*;
 
@@ -63,12 +63,11 @@ public class TimedMode {
             int remainingSeconds =
                 (int)((timeLimitMs - elapsed) / 1000);
 
-            ProgressUI.printQuestionProgress(questionNumber , 10);
-
-            ProgressUI.printStatLine(
-                "Time Remaining" ,
-                remainingSeconds + "s"
-            );
+            ProgressUI.printQuizDashboard(
+                    questionNumber,
+                    10,
+                    "Time Remaining",
+                    remainingSeconds + "s");
 
             System.out.println();
 
@@ -140,7 +139,7 @@ public class TimedMode {
         Profile profile = ProfileSession.getCurrentProfile();
 
         if (profile != null) {
-            ProfileManager.addGameResult(profile , score , won);
+            ProfileStats.recordMode(profile , "timed" , 10 , score);
             ProfileSession.setCurrentProfile(profile);
         }
     }

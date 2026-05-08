@@ -1,31 +1,639 @@
 package com.quizapp.dashboard;
 
 import java.awt.Desktop;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.List;
+import java.io.File;
+import java.io.PrintWriter;
 
-import com.quizapp.data.AppData;
 import com.quizapp.profiles.Profile;
-import com.quizapp.profiles.ProfileManager;
 
 public class DashboardGenerator {
 
-    public static void openDashboard(Profile currentProfile) {
+    public static void openDashboard(Profile profile) {
         try {
-            AppData.ensureGeneratedDataFolder();
+            File dashboard = new File("generated_data/dashboard.html");
+            dashboard.getParentFile().mkdirs();
 
-            Path dashboardPath = AppData.GENERATED_DATA_DIR.resolve("dashboard.html").toAbsolutePath();
+            double rankedAvg = profile.getRankedAverageScore();
+            double rankedWinRate = profile.getRankedWinRate();
+            double overallAccuracy = profile.getOverallAccuracy();
 
-            String html = buildHtml(currentProfile);
+            int timedGames = profile.getTimedGames();
+            int survivalGames = profile.getSurvivalGames();
+            int suddenDeathGames = profile.getSuddenDeathGames();
+            int pvpGames = profile.getPvpGames();
+            int llmGames = profile.getLlmGames();
+            int eloGames = profile.getEloGames();
 
-            Files.writeString(dashboardPath , html);
+            int totalModeGames = timedGames + survivalGames + suddenDeathGames + pvpGames + llmGames + eloGames;
+            int chartTotal = totalModeGames == 0 ? 1 : totalModeGames;
 
-            System.out.println("Dashboard generated at:");
-            System.out.println(dashboardPath);
+            String eloImage;
+            String eloMessage;
 
-            openFile(dashboardPath);
+            if (profile.getElo() >= 1400) {
+                eloImage = "images/elo_legend.png";
+                eloMessage = "Ranked monster detected , this profile is not here to play around";
+            } else if (profile.getElo() >= 1100) {
+                eloImage = "images/elo_good.png";
+                eloMessage = "Solid climb , the ranked arc is looking strong";
+            } else if (profile.getElo() >= 900) {
+                eloImage = "images/elo_mid.png";
+                eloMessage = "Respectable , some wins , some pain , mostly character development";
+            } else {
+                eloImage = "images/elo_low.png";
+                eloMessage = "The dashboard is being polite , the ELO is not";
+            }
+
+            String html = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width , initial-scale=1.0">
+<title>Quiz Project Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+    --bg: #050816;
+    --panel: rgba(15 , 23 , 42 , 0.82);
+    --panel2: rgba(30 , 41 , 59 , 0.72);
+    --border: rgba(148 , 163 , 184 , 0.18);
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --cyan: #22d3ee;
+    --purple: #a855f7;
+    --green: #22c55e;
+    --orange: #fb923c;
+    --pink: #e879f9;
+    --blue: #38bdf8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Inter , Arial , sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 15% 10% , rgba(34 , 211 , 238 , 0.22) , transparent 28%),
+        radial-gradient(circle at 85% 5% , rgba(168 , 85 , 247 , 0.28) , transparent 26%),
+        radial-gradient(circle at 50% 100% , rgba(14 , 165 , 233 , 0.14) , transparent 32%),
+        var(--bg);
+    padding: 34px;
+}
+
+.container {
+    max-width: 1480px;
+    margin: auto;
+}
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 34px;
+    padding: 42px;
+    margin-bottom: 28px;
+    background:
+        linear-gradient(135deg , rgba(34 , 211 , 238 , 0.95) , rgba(99 , 102 , 241 , 0.95) , rgba(168 , 85 , 247 , 0.95));
+    box-shadow: 0 30px 90px rgba(0 , 0 , 0 , 0.45);
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    right: -120px;
+    top: -170px;
+    border-radius: 999px;
+    background: rgba(255 , 255 , 255 , 0.18);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: center;
+}
+
+.hero h1 {
+    font-size: 58px;
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #e0f2fe;
+}
+
+.hero-badge {
+    background: rgba(2 , 6 , 23 , 0.25);
+    border: 1px solid rgba(255 , 255 , 255 , 0.22);
+    border-radius: 24px;
+    padding: 20px 24px;
+    min-width: 230px;
+}
+
+.hero-badge span {
+    display: block;
+    color: #dbeafe;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.hero-badge strong {
+    font-size: 42px;
+}
+
+.top-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2 , 1fr);
+    gap: 22px;
+}
+
+.card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 26px;
+    box-shadow: 0 18px 50px rgba(0 , 0 , 0 , 0.32);
+    backdrop-filter: blur(18px);
+}
+
+.card h2 {
+    color: #67e8f9;
+    font-size: 24px;
+    margin-bottom: 22px;
+    letter-spacing: -0.4px;
+}
+
+.big-number {
+    font-size: 54px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+}
+
+.subtle {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 16px;
+    line-height: 1.5;
+}
+
+.stat-row {
+    margin-bottom: 18px;
+}
+
+.stat-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+}
+
+.bar {
+    height: 12px;
+    background: rgba(51 , 65 , 85 , 0.78);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    border-radius: 999px;
+}
+
+.fill-cyan {
+    background: linear-gradient(90deg , var(--cyan) , #67e8f9);
+}
+
+.fill-green {
+    background: linear-gradient(90deg , var(--green) , #86efac);
+}
+
+.fill-purple {
+    background: linear-gradient(90deg , var(--purple) , #c084fc);
+}
+
+.mini-grid {
+    display: grid;
+    grid-template-columns: repeat(2 , 1fr);
+    gap: 16px;
+}
+
+.mini-card {
+    background: rgba(255 , 255 , 255 , 0.045);
+    border: 1px solid rgba(148 , 163 , 184 , 0.13);
+    border-radius: 20px;
+    padding: 18px;
+    min-height: 112px;
+}
+
+.mini-card span {
+    color: #c084fc;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.mini-card strong {
+    display: block;
+    font-size: 34px;
+    margin-top: 12px;
+}
+
+.chart-card {
+    min-height: 430px;
+}
+
+.chart-wrap {
+    height: 330px;
+    position: relative;
+}
+
+.image-card {
+    min-height: 430px;
+}
+
+.elo-image-wrap {
+    height: 330px;
+    border-radius: 24px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at top , rgba(34 , 211 , 238 , 0.12) , transparent 40%),
+        rgba(255 , 255 , 255 , 0.04);
+    border: 1px solid rgba(148 , 163 , 184 , 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.elo-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mode-bars {
+    display: grid;
+    gap: 15px;
+}
+
+.mode-line {
+    display: grid;
+    grid-template-columns: 120px 1fr 42px;
+    align-items: center;
+    gap: 12px;
+}
+
+.mode-name {
+    color: #cbd5e1;
+    font-weight: 700;
+}
+
+.mode-count {
+    text-align: right;
+    color: #e5e7eb;
+    font-weight: 800;
+}
+
+.mode-bar-bg {
+    height: 14px;
+    background: rgba(51 , 65 , 85 , 0.75);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.mode-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    min-width: 6px;
+}
+
+.footer {
+    margin-top: 28px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+@media(max-width: 1100px) {
+    .top-grid , .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<section class="hero">
+    <div class="hero-content">
+        <div>
+            <h1>{{name}}</h1>
+            <p>Professional analytics dashboard for your local Quiz Project profile</p>
+        </div>
+
+        <div class="hero-badge">
+            <span>Current Ranked Rating</span>
+            <strong>{{elo}}</strong>
+        </div>
+    </div>
+</section>
+
+<section class="top-grid">
+
+<div class="card">
+    <h2>Ranked Performance</h2>
+    <div class="big-number">{{elo}} ELO</div>
+
+    <div class="stat-row">
+        <div class="stat-label">
+            <span>Ranked Win Rate</span>
+            <strong>{{rankedWinRate}}%</strong>
+        </div>
+        <div class="bar">
+            <div class="fill fill-cyan" style="width: {{rankedWinRateRaw}}%;"></div>
+        </div>
+    </div>
+
+    <div class="stat-row">
+        <div class="stat-label">
+            <span>Overall Accuracy</span>
+            <strong>{{overallAccuracy}}%</strong>
+        </div>
+        <div class="bar">
+            <div class="fill fill-green" style="width: {{overallAccuracyRaw}}%;"></div>
+        </div>
+    </div>
+
+    <div class="stat-row">
+        <div class="stat-label">
+            <span>Average Ranked Score</span>
+            <strong>{{rankedAvg}} / 5</strong>
+        </div>
+        <div class="bar">
+            <div class="fill fill-purple" style="width: {{rankedAvgRaw}}%;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Ranked Record</h2>
+
+    <div class="mini-grid">
+        <div class="mini-card">
+            <span>Wins</span>
+            <strong>{{rankedWins}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Losses</span>
+            <strong>{{rankedLosses}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Best Score</span>
+            <strong>{{rankedBestScore}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Ranked Games</span>
+            <strong>{{rankedGames}}</strong>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>All Modes Summary</h2>
+
+    <div class="mini-grid">
+        <div class="mini-card">
+            <span>Total Games</span>
+            <strong>{{totalGames}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Questions</span>
+            <strong>{{totalQuestions}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Correct</span>
+            <strong>{{totalCorrect}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Favorite Mode</span>
+            <strong style="font-size:26px;">{{favoriteMode}}</strong>
+        </div>
+    </div>
+</div>
+
+</section>
+
+<section class="grid">
+
+<div class="card chart-card">
+    <h2>Mode Distribution</h2>
+    <div class="chart-wrap">
+        <canvas id="modeChart"></canvas>
+    </div>
+</div>
+
+<div class="card image-card">
+    <h2>ELO Mood</h2>
+    <div class="elo-image-wrap">
+        <img src="{{eloImage}}" alt="ELO Mood">
+    </div>
+    <p class="subtle">{{eloMessage}}</p>
+</div>
+
+</section>
+
+<section class="card" style="margin-top:22px;">
+    <h2>Mode Activity Breakdown</h2>
+
+    <div class="mode-bars">
+
+        <div class="mode-line">
+            <div class="mode-name">Timed</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill" style="width: {{timedPercent}}%; background: linear-gradient(90deg , #06b6d4 , #67e8f9);"></div>
+            </div>
+            <div class="mode-count">{{timedGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">Survival</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill" style="width: {{survivalPercent}}%; background: linear-gradient(90deg , #10b981 , #86efac);"></div>
+            </div>
+            <div class="mode-count">{{survivalGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">Sudden Death</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill" style="width: {{suddenPercent}}%; background: linear-gradient(90deg , #7c3aed , #c084fc);"></div>
+            </div>
+            <div class="mode-count">{{suddenDeathGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">PvP</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill" style="width: {{pvpPercent}}%; background: linear-gradient(90deg , #f97316 , #fdba74);"></div>
+            </div>
+            <div class="mode-count">{{pvpGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">LLM</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill" style="width: {{llmPercent}}%; background: linear-gradient(90deg , #e879f9 , #f0abfc);"></div>
+            </div>
+            <div class="mode-count">{{llmGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">ELO</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill" style="width: {{eloPercent}}%; background: linear-gradient(90deg , #38bdf8 , #818cf8);"></div>
+            </div>
+            <div class="mode-count">{{eloGames}}</div>
+        </div>
+
+    </div>
+</section>
+
+<div class="footer">
+    Generated locally from generated_data/quiz.db
+</div>
+
+</div>
+
+<script>
+const chartData = [
+    Number("{{timedGames}}"),
+    Number("{{survivalGames}}"),
+    Number("{{suddenDeathGames}}"),
+    Number("{{pvpGames}}"),
+    Number("{{llmGames}}"),
+    Number("{{eloGames}}")
+];
+
+const safeChartData = chartData.every(value => value === 0)
+    ? [1 , 1 , 1 , 1 , 1 , 1]
+    : chartData;
+
+const labels = ["Timed" , "Survival" , "Sudden Death" , "PvP" , "LLM" , "ELO"];
+const colors = ["#06b6d4" , "#10b981" , "#7c3aed" , "#f97316" , "#e879f9" , "#38bdf8"];
+
+new Chart(document.getElementById("modeChart") , {
+    type: "doughnut" ,
+    data: {
+        labels: labels ,
+        datasets: [{
+            data: safeChartData ,
+            backgroundColor: colors ,
+            borderColor: "#020617" ,
+            borderWidth: 6 ,
+            hoverOffset: 10
+        }]
+    } ,
+    options: {
+        maintainAspectRatio: false ,
+        cutout: "64%" ,
+        plugins: {
+            legend: {
+                position: "bottom" ,
+                labels: {
+                    color: "#e5e7eb" ,
+                    padding: 18 ,
+                    font: {
+                        size: 13 ,
+                        weight: "bold"
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
+""";
+
+            html = html
+                    .replace("{{name}}" , escapeHtml(profile.getName()))
+                    .replace("{{elo}}" , String.valueOf(profile.getElo()))
+
+                    .replace("{{rankedWinRate}}" , String.format("%.1f" , rankedWinRate))
+                    .replace("{{rankedWinRateRaw}}" , String.valueOf(clamp(rankedWinRate)))
+
+                    .replace("{{overallAccuracy}}" , String.format("%.1f" , overallAccuracy))
+                    .replace("{{overallAccuracyRaw}}" , String.valueOf(clamp(overallAccuracy)))
+
+                    .replace("{{rankedAvg}}" , String.format("%.2f" , rankedAvg))
+                    .replace("{{rankedAvgRaw}}" , String.valueOf(clamp(rankedAvg * 20)))
+
+                    .replace("{{rankedWins}}" , String.valueOf(profile.getRankedWins()))
+                    .replace("{{rankedLosses}}" , String.valueOf(profile.getRankedLosses()))
+                    .replace("{{rankedBestScore}}" , String.valueOf(profile.getRankedBestScore()))
+                    .replace("{{rankedGames}}" , String.valueOf(profile.getRankedGames()))
+
+                    .replace("{{totalGames}}" , String.valueOf(profile.getTotalGames()))
+                    .replace("{{totalQuestions}}" , String.valueOf(profile.getTotalQuestions()))
+                    .replace("{{totalCorrect}}" , String.valueOf(profile.getTotalCorrect()))
+                    .replace("{{favoriteMode}}" , escapeHtml(profile.getFavoriteMode()))
+
+                    .replace("{{timedGames}}" , String.valueOf(timedGames))
+                    .replace("{{survivalGames}}" , String.valueOf(survivalGames))
+                    .replace("{{suddenDeathGames}}" , String.valueOf(suddenDeathGames))
+                    .replace("{{pvpGames}}" , String.valueOf(pvpGames))
+                    .replace("{{llmGames}}" , String.valueOf(llmGames))
+                    .replace("{{eloGames}}" , String.valueOf(eloGames))
+
+                    .replace("{{timedPercent}}" , String.valueOf(percent(timedGames , chartTotal)))
+                    .replace("{{survivalPercent}}" , String.valueOf(percent(survivalGames , chartTotal)))
+                    .replace("{{suddenPercent}}" , String.valueOf(percent(suddenDeathGames , chartTotal)))
+                    .replace("{{pvpPercent}}" , String.valueOf(percent(pvpGames , chartTotal)))
+                    .replace("{{llmPercent}}" , String.valueOf(percent(llmGames , chartTotal)))
+                    .replace("{{eloPercent}}" , String.valueOf(percent(eloGames , chartTotal)))
+
+                    .replace("{{eloImage}}" , eloImage)
+                    .replace("{{eloMessage}}" , escapeHtml(eloMessage));
+
+            PrintWriter out = new PrintWriter(dashboard);
+            out.println(html);
+            out.close();
+
+            Desktop.getDesktop().browse(dashboard.toURI());
 
         } catch (Exception e) {
             System.out.println("Could not open dashboard: " + e.getMessage());
@@ -33,435 +641,20 @@ public class DashboardGenerator {
         }
     }
 
-    private static void openFile(Path dashboardPath) {
-        try {
-            if (Desktop.isDesktopSupported()) {
-                Desktop.getDesktop().browse(dashboardPath.toUri());
-                return;
-            }
-
-            String os = System.getProperty("os.name").toLowerCase();
-
-            if (os.contains("mac")) {
-                new ProcessBuilder("open" , dashboardPath.toString()).start();
-            } else if (os.contains("win")) {
-                new ProcessBuilder("cmd" , "/c" , "start" , "" , dashboardPath.toString()).start();
-            } else {
-                new ProcessBuilder("xdg-open" , dashboardPath.toString()).start();
-            }
-
-        } catch (Exception e) {
-            System.out.println("Open this file manually:");
-            System.out.println(dashboardPath);
-        }
+    private static double clamp(double value) {
+        return Math.min(100 , Math.max(0 , value));
     }
 
-    private static String buildHtml(Profile currentProfile) {
-        List<Profile> profiles = ProfileManager.getAllProfiles();
-        profiles.sort(Comparator.comparingInt(Profile::getElo).reversed());
+    private static int percent(int value , int total) {
+        if (total <= 0) return 0;
 
-        int rank = 1;
+        if (value == 0) return 0;
 
-        for (int i = 0; i < profiles.size(); i++) {
-            if (profiles.get(i).getName().equals(currentProfile.getName())) {
-                rank = i + 1;
-                break;
-            }
-        }
-
-        double winRate = currentProfile.getGamesPlayed() == 0
-                ? 0
-                : (currentProfile.getWins() * 100.0) / currentProfile.getGamesPlayed();
-
-        double averageScore = currentProfile.getGamesPlayed() == 0
-                ? 0
-                : (currentProfile.getTotalScore() * 1.0) / currentProfile.getGamesPlayed();
-
-        StringBuilder rows = new StringBuilder();
-
-        for (int i = 0; i < profiles.size(); i++) {
-            Profile p = profiles.get(i);
-
-            rows.append("<tr>")
-                .append("<td>#").append(i + 1).append("</td>")
-                .append("<td>").append(escapeHtml(p.getName())).append("</td>")
-                .append("<td>").append(p.getElo()).append("</td>")
-                .append("<td>").append(p.getGamesPlayed()).append("</td>")
-                .append("<td>").append(p.getWins()).append("</td>")
-                .append("<td>").append(p.getLosses()).append("</td>")
-                .append("<td>").append(p.getBestScore()).append("</td>")
-                .append("</tr>");
-        }
-
-        return """
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Quiz Dashboard</title>
-
-                <style>
-                    * {
-                        box-sizing: border-box;
-                    }
-
-                    body {
-                        margin: 0;
-                        font-family: Arial , sans-serif;
-                        background: radial-gradient(circle at top , #164e63 , #020617 55%);
-                        color: #e5e7eb;
-                    }
-
-                    .container {
-                        max-width: 1180px;
-                        margin: auto;
-                        padding: 40px;
-                    }
-
-                    .hero {
-                        background: linear-gradient(135deg , #0891b2 , #7c3aed);
-                        padding: 34px;
-                        border-radius: 28px;
-                        margin-bottom: 24px;
-                        box-shadow: 0 20px 60px rgba(0 , 0 , 0 , 0.35);
-                    }
-
-                    .hero h1 {
-                        margin: 0;
-                        font-size: 46px;
-                        letter-spacing: -1px;
-                    }
-
-                    .hero p {
-                        margin-bottom: 0;
-                        color: #e0f2fe;
-                        font-size: 18px;
-                    }
-
-                    .grid {
-                        display: grid;
-                        grid-template-columns: repeat(4 , 1fr);
-                        gap: 16px;
-                        margin-bottom: 24px;
-                    }
-
-                    .chart-grid {
-                        display: grid;
-                        grid-template-columns: repeat(2 , 1fr);
-                        gap: 16px;
-                        margin-bottom: 24px;
-                    }
-
-                    .card {
-                        background: rgba(15 , 23 , 42 , 0.88);
-                        border: 1px solid #334155;
-                        border-radius: 20px;
-                        padding: 22px;
-                        box-shadow: 0 12px 30px rgba(0 , 0 , 0 , 0.25);
-                    }
-
-                    .card span {
-                        color: #94a3b8;
-                        font-size: 14px;
-                    }
-
-                    .card h2 {
-                        margin: 10px 0 0;
-                        font-size: 32px;
-                    }
-
-                    .section {
-                        background: rgba(15 , 23 , 42 , 0.88);
-                        border: 1px solid #334155;
-                        border-radius: 24px;
-                        padding: 24px;
-                        margin-bottom: 24px;
-                        box-shadow: 0 12px 30px rgba(0 , 0 , 0 , 0.25);
-                    }
-
-                    .section h2 {
-                        margin-top: 0;
-                    }
-
-                    .bar {
-                        height: 14px;
-                        border-radius: 999px;
-                        background: #1e293b;
-                        overflow: hidden;
-                        margin-top: 12px;
-                    }
-
-                    .bar-fill {
-                        height: 100%;
-                        background: linear-gradient(90deg , #22d3ee , #a78bfa);
-                    }
-
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        overflow: hidden;
-                        border-radius: 18px;
-                    }
-
-                    th , td {
-                        padding: 15px;
-                        text-align: left;
-                        border-bottom: 1px solid #334155;
-                    }
-
-                    th {
-                        background: #1e293b;
-                        color: #67e8f9;
-                    }
-
-                    tr:hover {
-                        background: #1f2937;
-                    }
-
-                    canvas {
-                        max-height: 280px;
-                    }
-
-                    .muted {
-                        color: #94a3b8;
-                    }
-
-                    .footer {
-                        text-align: center;
-                        color: #64748b;
-                        margin-top: 24px;
-                    }
-
-                    @media(max-width: 900px) {
-                        .grid {
-                            grid-template-columns: repeat(2 , 1fr);
-                        }
-
-                        .chart-grid {
-                            grid-template-columns: 1fr;
-                        }
-                    }
-
-                    @media(max-width: 560px) {
-                        .grid {
-                            grid-template-columns: 1fr;
-                        }
-
-                        .container {
-                            padding: 20px;
-                        }
-
-                        .hero h1 {
-                            font-size: 34px;
-                        }
-                    }
-                </style>
-            </head>
-
-            <body>
-                <div class="container">
-                    <div class="hero">
-                        <h1>Quiz Project Dashboard</h1>
-                        <p>Current Profile: {{name}}</p>
-                    </div>
-
-                    <div class="grid">
-                        <div class="card">
-                            <span>Rank</span>
-                            <h2>#{{rank}}</h2>
-                        </div>
-
-                        <div class="card">
-                            <span>ELO Rating</span>
-                            <h2>{{elo}}</h2>
-                        </div>
-
-                        <div class="card">
-                            <span>Games Played</span>
-                            <h2>{{games}}</h2>
-                        </div>
-
-                        <div class="card">
-                            <span>Best Score</span>
-                            <h2>{{bestScore}}</h2>
-                        </div>
-                    </div>
-
-                    <div class="grid">
-                        <div class="card">
-                            <span>Wins</span>
-                            <h2>{{wins}}</h2>
-                        </div>
-
-                        <div class="card">
-                            <span>Losses</span>
-                            <h2>{{losses}}</h2>
-                        </div>
-
-                        <div class="card">
-                            <span>Win Rate</span>
-                            <h2>{{winRate}}%</h2>
-                        </div>
-
-                        <div class="card">
-                            <span>Average Score</span>
-                            <h2>{{averageScore}}</h2>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <h2>Leaderboard</h2>
-
-                        <table>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Profile</th>
-                                <th>ELO</th>
-                                <th>Games</th>
-                                <th>Wins</th>
-                                <th>Losses</th>
-                                <th>Best Score</th>
-                            </tr>
-
-                            {{rows}}
-                        </table>
-                    </div>
-
-                    <div class="chart-grid">
-                        <div class="section">
-                            <h2>Win / Loss Split</h2>
-                            <canvas id="winChart"></canvas>
-                        </div>
-
-                        <div class="section">
-                            <h2>ELO Progress</h2>
-                            <canvas id="eloChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="section">
-                        <h2>Performance Breakdown</h2>
-
-                        <div style="margin-top:20px;">
-                            <div style="display:flex;justify-content:space-between;">
-                                <span>Win Rate</span>
-                                <span>{{winRate}}%</span>
-                            </div>
-
-                            <div class="bar">
-                                <div class="bar-fill" style="width: {{winRateRaw}}%;"></div>
-                            </div>
-                        </div>
-
-                        <div style="margin-top:25px;">
-                            <div style="display:flex;justify-content:space-between;">
-                                <span>Average Score</span>
-                                <span>{{averageScore}}</span>
-                            </div>
-
-                            <div class="bar">
-                                <div class="bar-fill" style="width: {{averageScoreBar}}%;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="footer">
-                        Generated locally from QuizProjectMaven
-                    </div>
-                </div>
-
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-                <script>
-                    const wins = Number("{{wins}}");
-                    const losses = Number("{{losses}}");
-                    const elo = Number("{{elo}}");
-
-                    new Chart(document.getElementById("winChart") , {
-                        type: "doughnut" ,
-                        data: {
-                            labels: ["Wins" , "Losses"] ,
-                            datasets: [{
-                                data: [wins , losses] ,
-                                backgroundColor: ["#22d3ee" , "#7c3aed"] ,
-                                borderColor: "#020617" ,
-                                borderWidth: 4
-                            }]
-                        } ,
-                        options: {
-                            plugins: {
-                                legend: {
-                                    labels: {
-                                        color: "#e5e7eb"
-                                    }
-                                }
-                            }
-                        }
-                    });
-
-                    new Chart(document.getElementById("eloChart") , {
-                        type: "line" ,
-                        data: {
-                            labels: ["Start" , "Current"] ,
-                            datasets: [{
-                                label: "ELO" ,
-                                data: [1000 , elo] ,
-                                borderColor: "#22d3ee" ,
-                                backgroundColor: "rgba(34 , 211 , 238 , 0.18)" ,
-                                fill: true ,
-                                tension: 0.35
-                            }]
-                        } ,
-                        options: {
-                            scales: {
-                                x: {
-                                    ticks: {
-                                        color: "#e5e7eb"
-                                    } ,
-                                    grid: {
-                                        color: "#334155"
-                                    }
-                                } ,
-                                y: {
-                                    ticks: {
-                                        color: "#e5e7eb"
-                                    } ,
-                                    grid: {
-                                        color: "#334155"
-                                    }
-                                }
-                            } ,
-                            plugins: {
-                                legend: {
-                                    labels: {
-                                        color: "#e5e7eb"
-                                    }
-                                }
-                            }
-                        }
-                    });
-                </script>
-            </body>
-            </html>
-            """
-            .replace("{{name}}" , escapeHtml(currentProfile.getName()))
-            .replace("{{rank}}" , String.valueOf(rank))
-            .replace("{{elo}}" , String.valueOf(currentProfile.getElo()))
-            .replace("{{games}}" , String.valueOf(currentProfile.getGamesPlayed()))
-            .replace("{{wins}}" , String.valueOf(currentProfile.getWins()))
-            .replace("{{losses}}" , String.valueOf(currentProfile.getLosses()))
-            .replace("{{bestScore}}" , String.valueOf(currentProfile.getBestScore()))
-            .replace("{{winRate}}" , String.format("%.1f" , winRate))
-            .replace("{{winRateRaw}}" , String.valueOf(Math.min(100 , Math.max(0 , winRate))))
-            .replace("{{averageScore}}" , String.format("%.1f" , averageScore))
-            .replace("{{averageScoreBar}}" , String.valueOf(Math.min(100 , Math.max(0 , averageScore * 10))))
-            .replace("{{rows}}" , rows.toString());
+        return Math.max(6 , (int) Math.round((value * 100.0) / total));
     }
 
     private static String escapeHtml(String text) {
-        if (text == null) {
-            return "";
-        }
+        if (text == null) return "";
 
         return text
                 .replace("&" , "&amp;")

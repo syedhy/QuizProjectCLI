@@ -1,40 +1,18 @@
 package com.quizapp.ui;
 
 public class Terminal {
-    private static final int DEFAULT_WIDTH = 90;
+    private static final int LEFT_MARGIN = 4;
 
-    public static int getWidth() {
-        String columns = System.getenv("COLUMNS");
-
-        if (columns != null) {
-            try {
-                int width = Integer.parseInt(columns);
-
-                if (width > 0) {
-                    return width;
-                }
-            } catch (Exception e) {
-            }
-        }
-
-        return DEFAULT_WIDTH;
+    public static void print(String text) {
+        System.out.println(" ".repeat(LEFT_MARGIN) + text);
     }
 
-    public static void printCentered(String text) {
-        int terminalWidth = getWidth();
-
-        String[] lines = text.split("\\R");
-
-        for (String line : lines) {
-            String cleanLine = removeAnsi(line);
-            int padding = Math.max(0 , (terminalWidth - cleanLine.length()) / 2);
-
-            System.out.println(" ".repeat(padding) + line);
-        }
+    public static void printInline(String text) {
+        System.out.print(" ".repeat(LEFT_MARGIN) + text);
     }
 
-    public static void printlnCentered(String text) {
-        printCentered(text);
+    public static void printRaw(String text) {
+        System.out.println(text);
     }
 
     public static void printEmptyLines(int count) {
