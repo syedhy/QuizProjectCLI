@@ -33,7 +33,7 @@ public class DashboardGenerator {
                 eloMessage = "Solid climb";
             } else if (profile.getElo() >= 900) {
                 eloImage = "images/elo_mid.png";
-                eloMessage = "Respectable";
+                eloMessage = "Novice";
             } else {
                 eloImage = "images/elo_low.png";
                 eloMessage = "The dashboard is being polite but the ELO is not";
