@@ -15,7 +15,7 @@ target/
 *.log
 
 # Generated files
-generated_data/dashboard.html
+generated_data/dashboard/
 generated_data/Questions.txt
 
 # Optional

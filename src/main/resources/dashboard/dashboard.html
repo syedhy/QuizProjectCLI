@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width , initial-scale=1.0">
+<title>Quiz Project Dashboard</title>
+
+<link rel="stylesheet" href="dashboard.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="container">
+
+<section class="hero">
+    <div class="hero-content">
+        <div>
+            <h1>{{name}}</h1>
+            <p>Professional analytics dashboard for your local Quiz Project profile</p>
+        </div>
+
+        <div class="hero-badge">
+            <span>Current Ranked Rating</span>
+            <strong>{{elo}}</strong>
+        </div>
+    </div>
+</section>
+
+<section class="top-grid">
+
+<div class="card">
+    <h2>Ranked Performance</h2>
+    <div class="big-number">{{elo}} ELO</div>
+
+    <div class="stat-row">
+        <div class="stat-label">
+            <span>Ranked Win Rate</span>
+            <strong>{{rankedWinRate}}%</strong>
+        </div>
+        <div class="bar">
+            <div class="fill fill-cyan" data-width="{{rankedWinRateRaw}}"></div>
+        </div>
+    </div>
+
+    <div class="stat-row">
+        <div class="stat-label">
+            <span>Overall Accuracy</span>
+            <strong>{{overallAccuracy}}%</strong>
+        </div>
+        <div class="bar">
+            <div class="fill fill-green" data-width="{{overallAccuracyRaw}}"></div>
+        </div>
+    </div>
+
+    <div class="stat-row">
+        <div class="stat-label">
+            <span>Average Ranked Score</span>
+            <strong>{{rankedAvg}} / 5</strong>
+        </div>
+        <div class="bar">
+            <div class="fill fill-purple" data-width="{{rankedAvgRaw}}"></div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Ranked Record</h2>
+
+    <div class="mini-grid">
+        <div class="mini-card">
+            <span>Wins</span>
+            <strong>{{rankedWins}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Losses</span>
+            <strong>{{rankedLosses}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Best Score</span>
+            <strong>{{rankedBestScore}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Ranked Games</span>
+            <strong>{{rankedGames}}</strong>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>All Modes Summary</h2>
+
+    <div class="mini-grid">
+        <div class="mini-card">
+            <span>Total Games</span>
+            <strong>{{totalGames}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Questions</span>
+            <strong>{{totalQuestions}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Correct</span>
+            <strong>{{totalCorrect}}</strong>
+        </div>
+
+        <div class="mini-card">
+            <span>Favorite Mode</span>
+            <strong class="favorite-mode">{{favoriteMode}}</strong>
+        </div>
+    </div>
+</div>
+
+</section>
+
+<section class="card leaderboard-card">
+    <h2>Leaderboard</h2>
+
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Profile</th>
+                <th>ELO</th>
+                <th>Ranked Record</th>
+                <th>Win Rate</th>
+                <th>Best Score</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{leaderboardRows}}
+        </tbody>
+    </table>
+</section>
+
+<section class="grid">
+
+<div class="card chart-card">
+    <h2>Mode Distribution</h2>
+    <div class="chart-wrap">
+        <canvas id="modeChart"></canvas>
+    </div>
+</div>
+
+<div class="card image-card">
+    <h2>ELO Mood</h2>
+    <div class="elo-image-wrap">
+        <img src="{{eloImage}}" alt="ELO Mood">
+    </div>
+    <p class="subtle elo-message">{{eloMessage}}</p>
+</div>
+
+</section>
+
+<section class="card mode-card-section">
+    <h2>Mode Activity Breakdown</h2>
+
+    <div class="mode-bars">
+
+        <div class="mode-line">
+            <div class="mode-name">Timed</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill timed-fill" data-width="{{timedPercent}}"></div>
+            </div>
+            <div class="mode-count">{{timedGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">Survival</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill survival-fill" data-width="{{survivalPercent}}"></div>
+            </div>
+            <div class="mode-count">{{survivalGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">Sudden Death</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill sudden-fill" data-width="{{suddenPercent}}"></div>
+            </div>
+            <div class="mode-count">{{suddenDeathGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">PvP</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill pvp-fill" data-width="{{pvpPercent}}"></div>
+            </div>
+            <div class="mode-count">{{pvpGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">LLM</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill llm-fill" data-width="{{llmPercent}}"></div>
+            </div>
+            <div class="mode-count">{{llmGames}}</div>
+        </div>
+
+        <div class="mode-line">
+            <div class="mode-name">ELO</div>
+            <div class="mode-bar-bg">
+                <div class="mode-bar-fill elo-fill" data-width="{{eloPercent}}"></div>
+            </div>
+            <div class="mode-count">{{eloGames}}</div>
+        </div>
+
+    </div>
+</section>
+
+<div class="footer">
+    Generated locally from generated_data/quiz.db
+</div>
+
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
