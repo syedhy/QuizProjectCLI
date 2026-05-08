@@ -15,8 +15,10 @@ target/
 *.log
 
 # Generated files
-generated_data/dashboard/
-generated_data/Questions.txt
+generated_data/
 
 # Optional
 dependency-reduced-pom.xml
+
+# Compiled Java files
+*.class
