@@ -2,7 +2,7 @@ package com.quizapp.modes.llmmode.helpers;
 
 import java.util.*;
 
-import com.quizapp.dashboard.DashboardGenerator;
+import com.quizapp.dashboard.DashboardPrompt;
 import com.quizapp.helpers.*;
 import com.quizapp.profiles.Profile;
 import com.quizapp.profiles.ProfileSession;
@@ -59,7 +59,7 @@ public class StartQuiz {
         );
 
         saveProfileResult(answered , score);
-        askDashboard(sc);
+        DashboardPrompt.ask(sc);
     }
 
     private static void saveProfileResult(int answered , int score) {
@@ -68,18 +68,6 @@ public class StartQuiz {
         if (profile != null) {
             ProfileStats.recordMode(profile , "llm" , answered , score);
             ProfileSession.setCurrentProfile(profile);
-        }
-    }
-
-    private static void askDashboard(Scanner sc) {
-        System.out.print("\n" + Theme.MUTED_TEXT + "Open dashboard? [Y/N]: " + Theme.RESET);
-
-        String choice = sc.nextLine().trim();
-
-        if (choice.equalsIgnoreCase("y")) {
-            DashboardGenerator.openDashboard(ProfileSession.getCurrentProfile());
-            System.out.print("\nPress ENTER to continue...");
-            sc.nextLine();
         }
     }
 }

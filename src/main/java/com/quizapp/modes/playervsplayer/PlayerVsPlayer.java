@@ -2,14 +2,20 @@ package com.quizapp.modes.playervsplayer;
 
 import java.util.*;
 
+import com.quizapp.dashboard.DashboardPrompt;
 import com.quizapp.helpers.*;
+import com.quizapp.profiles.Profile;
+import com.quizapp.profiles.ProfileSession;
+import com.quizapp.profiles.ProfileStats;
 import com.quizapp.ui.*;
 
 public class PlayerVsPlayer {
     public static void StartPlayerVsPlayerQuiz(Scanner sc){
-        MenuUI.printModeDescription("Player vs Player" ,
+        MenuUI.printModeDescription(
+            "Player vs Player" ,
             "A local two player battle using the same question set" ,
-            "Player 1 answers 5 questions first\nPlayer 2 answers 5 questions next\nThe higher score wins");
+            "Player 1 answers 5 questions first\nPlayer 2 answers 5 questions next\nThe higher score wins"
+        );
 
         MenuUI.pressEnterToContinue(sc);
 
@@ -24,13 +30,13 @@ public class PlayerVsPlayer {
 
         int[] scores = {0 , 0};
 
-        for(int j = 0; j <= 1; j++){
-            int i = 1;
+        for(int player = 0; player <= 1; player++){
+            int questionNumber = 1;
 
             Screen.clear();
 
             Terminal.print(Theme.BORDER_COLOR + "╭────────────────────────────────────╮" + Theme.RESET);
-            Terminal.print(Theme.BORDER_COLOR + "│" + Theme.TITLE_TEXT + Terminal.centerLine("PLAYER " + (j + 1) + " GET READY" , 36) + Theme.BORDER_COLOR + "│" + Theme.RESET);
+            Terminal.print(Theme.BORDER_COLOR + "│" + Theme.TITLE_TEXT + Terminal.centerLine("PLAYER " + (player + 1) + " GET READY" , 36) + Theme.BORDER_COLOR + "│" + Theme.RESET);
             Terminal.print(Theme.BORDER_COLOR + "╰────────────────────────────────────╯" + Theme.RESET);
 
             Screen.pause(1500);
@@ -38,11 +44,11 @@ public class PlayerVsPlayer {
             for(Question q : qs){
                 Screen.clear();
 
-                Terminal.print(Theme.TITLE_TEXT + Theme.BOLD + "PLAYER " + (j + 1) + " TURN" + Theme.RESET);
+                Terminal.print(Theme.TITLE_TEXT + Theme.BOLD + "PLAYER " + (player + 1) + " TURN" + Theme.RESET);
 
-                ProgressUI.printQuestionProgress(i , 5);
+                ProgressUI.printQuestionProgress(questionNumber , 5);
 
-                QuizUI.printQuestionBox(i , q.question , q.options);
+                QuizUI.printQuestionBox(questionNumber , q.question , q.options);
 
                 String input = sc.nextLine();
 
@@ -53,16 +59,16 @@ public class PlayerVsPlayer {
                 }
 
                 if(ans == q.answer.charAt(0)){
-                    scores[j]++;
+                    scores[player]++;
                 }
 
                 QuizUI.printAnswerFeedback(ans , q.answer.charAt(0));
 
                 Screen.pause(1200);
 
-                if(i >= 5) break;
+                if(questionNumber >= 5) break;
 
-                i++;
+                questionNumber++;
             }
         }
 
@@ -84,5 +90,17 @@ public class PlayerVsPlayer {
             5 ,
             "P1: " + scores[0] + "   │   P2: " + scores[1]
         );
+
+        saveProfileResult(scores[0] + scores[1]);
+        DashboardPrompt.ask(sc);
+    }
+
+    private static void saveProfileResult(int totalCorrect) {
+        Profile profile = ProfileSession.getCurrentProfile();
+
+        if (profile != null) {
+            ProfileStats.recordMode(profile , "pvp" , 10 , totalCorrect);
+            ProfileSession.setCurrentProfile(profile);
+        }
     }
 }

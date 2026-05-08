@@ -3,8 +3,11 @@ package com.quizapp.dashboard;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Comparator;
+import java.util.List;
 
 import com.quizapp.profiles.Profile;
+import com.quizapp.profiles.ProfileManager;
 
 public class DashboardGenerator {
 
@@ -30,19 +33,21 @@ public class DashboardGenerator {
             String eloImage;
             String eloMessage;
 
-            if (profile.getElo() >= 1400) {
+            if (profile.getElo() >= 1100) {
                 eloImage = "images/elo_legend.png";
-                eloMessage = "Ranked monster detected , this profile is not here to play around";
-            } else if (profile.getElo() >= 1100) {
+                eloMessage = "Ranked monster detected";
+            } else if (profile.getElo() >= 1050) {
                 eloImage = "images/elo_good.png";
-                eloMessage = "Solid climb , the ranked arc is looking strong";
+                eloMessage = "Solid climb";
             } else if (profile.getElo() >= 900) {
                 eloImage = "images/elo_mid.png";
-                eloMessage = "Respectable , some wins , some pain , mostly character development";
+                eloMessage = "Respectable";
             } else {
                 eloImage = "images/elo_low.png";
-                eloMessage = "The dashboard is being polite , the ELO is not";
+                eloMessage = "The dashboard is being polite but the ELO is not";
             }
+
+            String leaderboardRows = buildLeaderboardRows(profile);
 
             String html = """
 <!DOCTYPE html>
@@ -273,7 +278,7 @@ body {
 }
 
 .elo-image-wrap {
-    height: 330px;
+    height: 360px;
     border-radius: 24px;
     overflow: hidden;
     background:
@@ -286,9 +291,10 @@ body {
 }
 
 .elo-image-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .mode-bars {
@@ -327,6 +333,42 @@ body {
     min-width: 6px;
 }
 
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+.leaderboard-table th {
+    color: #67e8f9;
+    text-align: left;
+    font-size: 13px;
+    padding: 14px;
+    background: rgba(15 , 23 , 42 , 0.75);
+    border-bottom: 1px solid rgba(148 , 163 , 184 , 0.18);
+}
+
+.leaderboard-table td {
+    padding: 16px 14px;
+    border-bottom: 1px solid rgba(148 , 163 , 184 , 0.10);
+    color: #e5e7eb;
+}
+
+.leaderboard-table tr:hover {
+    background: rgba(255 , 255 , 255 , 0.045);
+}
+
+.leaderboard-rank {
+    font-weight: 900;
+    color: #c084fc;
+}
+
+.current-user-row {
+    background: rgba(34 , 211 , 238 , 0.10);
+    outline: 1px solid rgba(34 , 211 , 238 , 0.28);
+}
+
 .footer {
     margin-top: 28px;
     text-align: center;
@@ -343,6 +385,60 @@ body {
         flex-direction: column;
         align-items: flex-start;
     }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero ,
+.card {
+    animation: fadeUp 0.75s ease both;
+}
+
+.top-grid .card:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+.top-grid .card:nth-child(2) {
+    animation-delay: 0.16s;
+}
+
+.top-grid .card:nth-child(3) {
+    animation-delay: 0.24s;
+}
+
+.grid .card:nth-child(1) {
+    animation-delay: 0.32s;
+}
+
+.grid .card:nth-child(2) {
+    animation-delay: 0.40s;
+}
+
+section.card {
+    animation-delay: 0.48s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    transition: 0.25s ease;
+    border-color: rgba(103 , 232 , 249 , 0.42);
+    box-shadow: 0 24px 70px rgba(0 , 0 , 0 , 0.42);
+}
+.elo-message {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #cbd5e1;
 }
 </style>
 </head>
@@ -454,7 +550,26 @@ body {
 </div>
 
 </section>
+<section class="card" style="margin-bottom:22px;">
+    <h2>Leaderboard</h2>
 
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Profile</th>
+                <th>ELO</th>
+                <th>Ranked Record</th>
+                <th>Win Rate</th>
+                <th>Best Score</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{leaderboardRows}}
+        </tbody>
+    </table>
+</section>
 <section class="grid">
 
 <div class="card chart-card">
@@ -469,10 +584,12 @@ body {
     <div class="elo-image-wrap">
         <img src="{{eloImage}}" alt="ELO Mood">
     </div>
-    <p class="subtle">{{eloMessage}}</p>
+    <p class="subtle elo-message">{{eloMessage}}</p>
 </div>
 
 </section>
+
+
 
 <section class="card" style="margin-top:22px;">
     <h2>Mode Activity Breakdown</h2>
@@ -626,6 +743,8 @@ new Chart(document.getElementById("modeChart") , {
                     .replace("{{llmPercent}}" , String.valueOf(percent(llmGames , chartTotal)))
                     .replace("{{eloPercent}}" , String.valueOf(percent(eloGames , chartTotal)))
 
+                    .replace("{{leaderboardRows}}" , leaderboardRows)
+
                     .replace("{{eloImage}}" , eloImage)
                     .replace("{{eloMessage}}" , escapeHtml(eloMessage));
 
@@ -639,6 +758,59 @@ new Chart(document.getElementById("modeChart") , {
             System.out.println("Could not open dashboard: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private static String buildLeaderboardRows(Profile currentProfile) {
+        List<Profile> profiles = ProfileManager.getAllProfiles();
+
+        profiles.sort(
+            Comparator.comparingInt(Profile::getElo)
+                .reversed()
+                .thenComparing(Profile::getName)
+        );
+
+        StringBuilder rows = new StringBuilder();
+
+        for (int i = 0; i < profiles.size(); i++) {
+            Profile p = profiles.get(i);
+
+            String rowClass = p.getName().equalsIgnoreCase(currentProfile.getName())
+                    ? " class=\"current-user-row\""
+                    : "";
+
+            rows.append("<tr")
+                    .append(rowClass)
+                    .append(">")
+                    .append("<td class=\"leaderboard-rank\">#")
+                    .append(i + 1)
+                    .append("</td>")
+                    .append("<td>")
+                    .append(escapeHtml(p.getName()))
+                    .append("</td>")
+                    .append("<td>")
+                    .append(p.getElo())
+                    .append("</td>")
+                    .append("<td>")
+                    .append(p.getRankedWins())
+                    .append("W - ")
+                    .append(p.getRankedLosses())
+                    .append("L")
+                    .append("</td>")
+                    .append("<td>")
+                    .append(String.format("%.1f" , p.getRankedWinRate()))
+                    .append("%")
+                    .append("</td>")
+                    .append("<td>")
+                    .append(p.getRankedBestScore())
+                    .append("</td>")
+                    .append("</tr>");
+        }
+
+        if (rows.isEmpty()) {
+            rows.append("<tr><td colspan=\"6\">No profiles found yet</td></tr>");
+        }
+
+        return rows.toString();
     }
 
     private static double clamp(double value) {

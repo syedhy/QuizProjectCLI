@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-import com.quizapp.dashboard.DashboardGenerator;
+import com.quizapp.dashboard.DashboardPrompt;
 import com.quizapp.helpers.FileChooser;
 import com.quizapp.helpers.ListMaker;
 import com.quizapp.helpers.Question;
@@ -15,7 +15,6 @@ import com.quizapp.ui.MenuUI;
 import com.quizapp.ui.ProgressUI;
 import com.quizapp.ui.QuizUI;
 import com.quizapp.ui.Screen;
-import com.quizapp.ui.Theme;
 
 public class EloMode {
     public static void startEloQuiz(Scanner sc) {
@@ -95,18 +94,6 @@ public class EloMode {
             "ELO: " + oldElo + " → " + newElo
         );
 
-        askDashboard(sc);
-    }
-
-    private static void askDashboard(Scanner sc) {
-        System.out.print("\n" + Theme.MUTED_TEXT + "Open dashboard? [Y/N]: " + Theme.RESET);
-
-        String choice = sc.nextLine().trim();
-
-        if (choice.equalsIgnoreCase("y")) {
-            DashboardGenerator.openDashboard(ProfileSession.getCurrentProfile());
-            System.out.print("\nPress ENTER to continue...");
-            sc.nextLine();
-        }
+        DashboardPrompt.ask(sc);
     }
 }
