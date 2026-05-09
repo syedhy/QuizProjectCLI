@@ -3,7 +3,7 @@ package com.quizapp.ui;
 import java.util.Scanner;
 
 public class MenuUI {
-    private static final int MENU_WIDTH = 70;
+    public static final int MENU_WIDTH = 70;
 
     public static void printMainMenu() {
         printMenuHeader("QUIZ PROJECT");

@@ -90,31 +90,33 @@ public class Main {
     }
 
     private static void printTopProfileBar(Profile profile) {
-        int width = 64;
-
+        int width = MenuUI.MENU_WIDTH;
         Terminal.print(Theme.BORDER_COLOR + "╭" + "─".repeat(width) + "╮" + Theme.RESET);
+        Terminal.print(
+                Theme.BORDER_COLOR + "│" +
+                        Theme.TITLE_TEXT
+                        + Terminal.centerLine(
+                                "Profile : " + profile.getName() + "   │   ELO: " + profile.getElo(), width)
+                        +
+                        Theme.BORDER_COLOR + "│" +
+                        Theme.RESET);
 
         Terminal.print(
-            Theme.BORDER_COLOR + "│" +
-            Theme.TITLE_TEXT + Terminal.centerLine("Current Profile: " + profile.getName() + "   │   ELO: " + profile.getElo() , width) +
-            Theme.BORDER_COLOR + "│" +
-            Theme.RESET
-        );
+                Theme.BORDER_COLOR + "│" +
+                        Terminal.padRight("", width) +
+                        Theme.BORDER_COLOR + "│" +
+                        Theme.RESET);
 
         Terminal.print(
-            Theme.BORDER_COLOR + "│" +
-            Terminal.padRight("" , width) +
-            Theme.BORDER_COLOR + "│" +
-            Theme.RESET
-        );
-
-        Terminal.print(
-            Theme.BORDER_COLOR + "│" +
-            Theme.MUTED_TEXT + Terminal.centerLine("Ranked: " + profile.getRankedWins() + "W - " + profile.getRankedLosses() + "L" , width) +
-            Theme.BORDER_COLOR + "│" +
-            Theme.RESET
-        );
+                Theme.BORDER_COLOR + "│" +
+                        Theme.MUTED_TEXT
+                        + Terminal.centerLine(
+                                "Ranked: " + profile.getRankedWins() + "W - " + profile.getRankedLosses() + "L", width)
+                        +
+                        Theme.BORDER_COLOR + "│" +
+                        Theme.RESET);
 
         Terminal.print(Theme.BORDER_COLOR + "╰" + "─".repeat(width) + "╯" + Theme.RESET);
+        Terminal.printEmptyLines(1);
     }
 }
